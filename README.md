@@ -62,7 +62,7 @@ The system uses Flask as the web framework with a blueprint-based architecture:
 - **API Routes:** src/routes/api.py implements REST endpoints with the api_bp blueprint
 
 
-- **Technology Stack**
+### Technology Stack
 - **Core Technologies**
 
 <img src="Core Technologies.png" alt="Core Tech.png" width="800"/>

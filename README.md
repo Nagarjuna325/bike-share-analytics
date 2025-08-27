@@ -121,12 +121,12 @@ The system passes all three required acceptance tests:
 
 ```bash
 # Required
-PGHOST=agentify-assessment.postgres.database.azure.com
-PGUSER=attriassessment
-PGPORT=5432
-PGDATABASE=bike-share-assessment
-PGPASSWORD=your_password
-GROQ_API_KEY=your_groq_key
+PGHOST=
+PGUSER=
+PGPORT=
+PGDATABASE=
+PGPASSWORD=
+GROQ_API_KEY=
 
 # Optional
 DEBUG=True

@@ -179,6 +179,7 @@ Generate the SQL query:"""
             LIMIT 1
             """
         
+        
         elif 'kilometres' in question_lower and 'women' in question_lower:
             return """
             SELECT SUM(t.trip_distance_km) as total_kilometres

@@ -37,7 +37,7 @@ A natural language bike-share analytics assistant that converts unlimited Englis
 
 - **High-level Component Architecture**
 
-<img src="High-level Component Architecture.png" alt="High-level Component Architecture" width="800"/>
+<img src="High-Level Component Architecture.png" alt="High-level Component Architecture" width="800"/>
 
 - **Service Interaction Flow**
 

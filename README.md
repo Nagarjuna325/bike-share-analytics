@@ -68,7 +68,7 @@ The system uses Flask as the web framework with a blueprint-based architecture:
 <img src="Core Technologies.png" alt="Core Tech.png" width="800"/>
 
 - **External Dependencies**
-- Groq LLM: llama-3.1-70b-versatile model for SQL generation
+- Groq LLM: **llama-3.1-8b-instant** model for SQL generation
 - Azure PostgreSQL: Cloud database hosting the bike share dataset
 - Sentence Transformers: all-MiniLM-L6-v2 model for embedding-based semantic matching
 - Bootstrap 5: Frontend styling framework
@@ -86,7 +86,7 @@ The system achieves zero hardcoded semantic mappings through:
 
 ### LLM Integration
 
-- **Primary**: Groq Cloud API with llama-3.1-70b-versatile model
+- **Primary**: Groq Cloud API with **llama-3.1-8b-instant** model
 - **Prompting**: Schema-aware prompts with semantic context
 - **Fallback**: Rule-based SQL generation for common bike share patterns
 - **Safety**: SQL injection prevention through query validation

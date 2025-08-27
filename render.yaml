@@ -1,0 +1,31 @@
+services:
+  - type: web
+    name: bike-share-analytics
+    env: docker
+    dockerfilePath: ./Dockerfile
+    region: oregon
+    plan: free
+    buildCommand: ""
+    startCommand: ""
+    healthCheckPath: /
+    envVars:
+      - key: GROQ_API_KEY
+        sync: false
+      - key: DATABASE_URL
+        value: postgresql://bike_share_user:bike_share_pass@agentify-assessment.postgres.database.azure.com:5432/bike-share-assessment
+      - key: PGHOST
+        value: agentify-assessment.postgres.database.azure.com
+      - key: PGPORT
+        value: 5432
+      - key: PGDATABASE
+        value: bike-share-assessment
+      - key: PGUSER
+        value: bike_share_user
+      - key: PGPASSWORD
+        value: bike_share_pass
+      - key: SESSION_SECRET
+        generateValue: true
+      - key: FLASK_ENV
+        value: production
+    numInstances: 1
+    autoDeploy: true

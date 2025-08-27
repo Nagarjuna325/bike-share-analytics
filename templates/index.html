@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bike Share Analytics Assistant</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.replit.com/agent/bootstrap-agent-dark-theme.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <!-- Hero Section -->
+    <div class="hero-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 mx-auto text-center">
+                    <h1><i class="fas fa-bicycle"></i> Bike Share Analytics Assistant</h1>
+                    <p class="lead">Ask natural language questions about bike share data and get instant SQL-powered insights</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-10 col-xl-8">
+                <!-- Chat Interface -->
+                <div class="chat-container">
+                    <!-- Chat Messages Container -->
+                    <div id="chat-container">
+                        <!-- Messages will be dynamically added here -->
+                    </div>
+                    
+                    <!-- Loading Indicator -->
+                    <div id="loading" style="display: none;">
+                        <div class="d-flex align-items-center justify-content-center">
+                            <div class="spinner-border spinner-border-sm me-2" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                            <span>Processing your question...</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Input Container -->
+                    <div class="input-container p-3">
+                        <div class="input-group">
+                            <textarea 
+                                id="message-input" 
+                                class="form-control" 
+                                placeholder="Ask a question about bike share data..." 
+                                rows="2"
+                                style="resize: none;"
+                            ></textarea>
+                            <button id="send-button" class="btn btn-primary" type="button">
+                                <i class="fas fa-paper-plane"></i>
+                                <span class="d-none d-sm-inline ms-1">Send</span>
+                            </button>
+                        </div>
+                        <div class="mt-2">
+                            <small class="text-muted">
+                                <i class="fas fa-lightbulb"></i>
+                                Try asking: "What was the average ride time at Congress Avenue in June 2025?"
+                            </small>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Example Questions -->
+                <div class="mt-4">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="card-title mb-0">
+                                <i class="fas fa-question-circle"></i>
+                                Example Questions
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <ul class="list-unstyled">
+                                        <li class="mb-2">
+                                            <button class="btn btn-outline-secondary btn-sm w-100 text-start example-question" 
+                                                    data-question="What was the average ride time for journeys that started at Congress Avenue in June 2025?">
+                                                <i class="fas fa-clock me-2"></i>
+                                                Average ride time at Congress Avenue
+                                            </button>
+                                        </li>
+                                        <li class="mb-2">
+                                            <button class="btn btn-outline-secondary btn-sm w-100 text-start example-question"
+                                                    data-question="Which docking point saw the most departures during the first week of June 2025?">
+                                                <i class="fas fa-chart-bar me-2"></i>
+                                                Most popular departure point
+                                            </button>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="col-md-6">
+                                    <ul class="list-unstyled">
+                                        <li class="mb-2">
+                                            <button class="btn btn-outline-secondary btn-sm w-100 text-start example-question"
+                                                    data-question="How many kilometres were ridden by women on rainy days in June 2025?">
+                                                <i class="fas fa-ruler me-2"></i>
+                                                Distance by women on rainy days
+                                            </button>
+                                        </li>
+                                        <li class="mb-2">
+                                            <button class="btn btn-outline-secondary btn-sm w-100 text-start example-question"
+                                                    data-question="How many rides were taken last month?">
+                                                <i class="fas fa-bicycle me-2"></i>
+                                                Total rides last month
+                                            </button>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Features -->
+                <div class="mt-4">
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <div class="card h-100">
+                                <div class="card-body text-center">
+                                    <i class="fas fa-brain fa-2x text-primary mb-2"></i>
+                                    <h6>Natural Language Processing</h6>
+                                    <small class="text-muted">Ask questions in plain English</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <div class="card h-100">
+                                <div class="card-body text-center">
+                                    <i class="fas fa-database fa-2x text-success mb-2"></i>
+                                    <h6>Real-time Data</h6>
+                                    <small class="text-muted">Connected to live PostgreSQL database</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <div class="card h-100">
+                                <div class="card-body text-center">
+                                    <i class="fas fa-shield-alt fa-2x text-warning mb-2"></i>
+                                    <h6>Secure Queries</h6>
+                                    <small class="text-muted">SQL injection protection built-in</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="mt-5 py-4 text-center text-muted">
+        <div class="container">
+            <p>&copy; 2025 Bike Share Analytics Assistant.</p>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Custom JS -->
+    <script src="{{ url_for('static', filename='js/chat.js') }}"></script>
+    
+    <script>
+        // Add click handlers for example questions
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.example-question').forEach(button => {
+                button.addEventListener('click', function() {
+                    const question = this.getAttribute('data-question');
+                    document.getElementById('message-input').value = question;
+                    document.getElementById('send-button').click();
+                });
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,45 @@
+# --- Python bytecode / cache ---
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# --- Virtual environments / dependencies ---
+venv/
+.venv/
+env/
+ENV/
+Lib/
+Scripts/
+Include/
+pyvenv.cfg
+*.egg-info/
+.eggs/
+dist/
+build/
+*.egg
+
+# --- Installed site-packages (accidentally copied here) ---
+/sqlalchemy/
+/pyparsing/
+/sniffio/
+/setuptools*/
+
+# --- Secrets ---
+.env
+*.env
+
+# --- Logs ---
+*.log
+
+# --- Test/coverage artifacts ---
+.pytest_cache/
+.coverage
+htmlcov/
+.cache/
+
+# --- Editors / OS ---
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

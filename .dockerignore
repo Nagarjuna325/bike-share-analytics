@@ -1,0 +1,63 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual environments
+venv/
+env/
+ENV/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Git
+.git/
+.gitignore
+
+# Replit specific
+.replit
+replit.nix
+pyproject.toml
+uv.lock
+.uv/
+
+# Logs
+*.log
+logs/
+
+# Environment variables (will be set in deployment)
+.env
+
+# Temporary files
+*.tmp
+*.temp
+
+# Attached assets (not needed in production)
+attached_assets/

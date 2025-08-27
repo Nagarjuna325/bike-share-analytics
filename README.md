@@ -47,7 +47,7 @@ A natural language bike-share analytics assistant that converts unlimited Englis
 - **REST API** (`src/routes/api.py`): `/query` endpoint accepting JSON requests
 - **Web Interface** (`src/templates/index.html`): Chat-style UI for natural language interaction
 
-### Core Components**
+### Core Components
 - **Service Layer**
 
 <img src="Service Layer.png" alt="Service.png" width="800"/>

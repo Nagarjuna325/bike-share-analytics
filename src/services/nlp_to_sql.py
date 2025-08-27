@@ -94,6 +94,8 @@ INSTRUCTIONS:
    - "kilometres/distance" maps to trip_distance_km column
    - Station names map to station_name column
    - Time references need proper date filtering (use actual dates like '2025-06-01')
+   - "departures/started from" uses start_station_id (where trips began)
+   - "arrivals/ended at" uses end_station_id (where trips finished)
 8. IMPORTANT: Do not include any parameter placeholders, use actual values in the SQL
 9. WEATHER QUERIES: For rainy/weather conditions, join trips with daily_weather using:
    JOIN daily_weather ON DATE(trips.started_at) = daily_weather.weather_date

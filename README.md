@@ -36,11 +36,11 @@ A natural language bike-share analytics assistant that converts unlimited Englis
    - User-friendly response generation
 
 - **High-level Component Architecture**
-<img src="High-Level Component Architecture.png" alt="High-level Component Architecture" width="800"/>
+<img src="High-level Component Architecture.png" alt="High-level Component Architecture" width="800"/>
 
 - **Service Interaction Flow**
 
- <img src="Service Interaction Flow.png" alt="Service Interaction Flow.png" width="800"/>
+ <img src="Service-Interaction Flow.png" alt="Service Interaction Flow.png" width="800"/>
 
 ### API Layer
 
@@ -50,7 +50,7 @@ A natural language bike-share analytics assistant that converts unlimited Englis
 ### Core Components
 - **Service Layer**
 
-<img src="Service Layer.png" alt="Service.png" width="800"/>
+<img src="Service Layers.png" alt="Service.png" width="800"/>
 
 
 - **Application Framework**
@@ -65,7 +65,7 @@ The system uses Flask as the web framework with a blueprint-based architecture:
 ### Technology Stack
 - **Core Technologies**
 
-<img src="Core Technologies.png" alt="Core Tech.png" width="800"/>
+<img src="Core Technologie.png" alt="Core Tech.png" width="800"/>
 
 - **External Dependencies**
 - Groq LLM: **llama-3.1-8b-instant** model for SQL generation

@@ -36,6 +36,7 @@ A natural language bike-share analytics assistant that converts unlimited Englis
    - User-friendly response generation
 
 ![High-level Component Architecture](High-Level Component Architecture.png)
+<img src="High-level Component Arch.png" alt="High-level Component Architecture" width="800"/>
 
 ### API Layer
 

@@ -35,13 +35,42 @@ A natural language bike-share analytics assistant that converts unlimited Englis
    - Result formatting and error handling
    - User-friendly response generation
 
-![High-level Component Architecture](High-Level Component Architecture.png)
+- **High-level Component Architecture**
 <img src="High-Level Component Architecture.png" alt="High-level Component Architecture" width="800"/>
+
+- **Service Interaction Flow**
+
+ <img src="Service Interaction Flow.png" alt="Service Interaction Flow.png" width="800"/>
 
 ### API Layer
 
 - **REST API** (`src/routes/api.py`): `/query` endpoint accepting JSON requests
 - **Web Interface** (`src/templates/index.html`): Chat-style UI for natural language interaction
+
+- **Core Components**
+- **Service Layer**
+- Service	File	Primary Responsibility
+- NLP-to-SQL Service	src/services/nlp_to_sql.py	Orchestrates natural language to SQL conversion using Groq LLM
+- Query Executor	src/services/query_executor.py	Executes SQL queries safely with parameterized statements
+- Schema Discovery	src/services/schema_discovery.py	Dynamically introspects PostgreSQL schema using information_schema
+- Semantic Matcher	src/services/semantic_matcher.py	Maps user terms to database columns using embedding similarity
+- **Application Framework**
+The system uses Flask as the web framework with a blueprint-based architecture:
+
+- **Main Application:** app.py implements the application factory pattern using create_app()
+- **Entry Point:** main.py provides the development server entry point
+- **Configuration:** src/config.py centralizes environment-based configuration management
+- **API Routes:** src/routes/api.py implements REST endpoints with the api_bp blueprint
+
+
+- **Technology Stack**
+- **Core Technologies**
+- Component	Technology	Purpose
+- Web Framework	Flask	HTTP server and request routing
+- LLM Integration	Groq Cloud API	Natural language to SQL conversion
+- Database	PostgreSQL	Data storage and query execution
+- Embeddings	Sentence Transformers	Semantic similarity computation
+- Frontend	HTML/CSS/JavaScript	Web-based chat interface
 
 ## 🔧 Technical Implementation
 

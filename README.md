@@ -47,13 +47,12 @@ A natural language bike-share analytics assistant that converts unlimited Englis
 - **REST API** (`src/routes/api.py`): `/query` endpoint accepting JSON requests
 - **Web Interface** (`src/templates/index.html`): Chat-style UI for natural language interaction
 
-- **Core Components**
+### Core Components**
 - **Service Layer**
-- Service	File	Primary Responsibility
-- NLP-to-SQL Service	src/services/nlp_to_sql.py	Orchestrates natural language to SQL conversion using Groq LLM
-- Query Executor	src/services/query_executor.py	Executes SQL queries safely with parameterized statements
-- Schema Discovery	src/services/schema_discovery.py	Dynamically introspects PostgreSQL schema using information_schema
-- Semantic Matcher	src/services/semantic_matcher.py	Maps user terms to database columns using embedding similarity
+
+<img src="Service Layer.png" alt="Service.png" width="800"/>
+
+
 - **Application Framework**
 The system uses Flask as the web framework with a blueprint-based architecture:
 
@@ -65,12 +64,14 @@ The system uses Flask as the web framework with a blueprint-based architecture:
 
 - **Technology Stack**
 - **Core Technologies**
-- Component	Technology	Purpose
-- Web Framework	Flask	HTTP server and request routing
-- LLM Integration	Groq Cloud API	Natural language to SQL conversion
-- Database	PostgreSQL	Data storage and query execution
-- Embeddings	Sentence Transformers	Semantic similarity computation
-- Frontend	HTML/CSS/JavaScript	Web-based chat interface
+
+<img src="Core Technologies.png" alt="Core Tech.png" width="800"/>
+
+- **External Dependencies**
+- Groq LLM: llama-3.1-70b-versatile model for SQL generation
+- Azure PostgreSQL: Cloud database hosting the bike share dataset
+- Sentence Transformers: all-MiniLM-L6-v2 model for embedding-based semantic matching
+- Bootstrap 5: Frontend styling framework
 
 ## 🔧 Technical Implementation
 

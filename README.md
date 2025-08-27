@@ -35,6 +35,8 @@ A natural language bike-share analytics assistant that converts unlimited Englis
    - Result formatting and error handling
    - User-friendly response generation
 
+![High-level Component Architecture](High-Level Component Architecture.png)
+
 ### API Layer
 
 - **REST API** (`src/routes/api.py`): `/query` endpoint accepting JSON requests

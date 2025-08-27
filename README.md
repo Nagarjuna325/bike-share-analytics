@@ -39,7 +39,6 @@ A natural language bike-share analytics assistant that converts unlimited Englis
 
 - **REST API** (`src/routes/api.py`): `/query` endpoint accepting JSON requests
 - **Web Interface** (`src/templates/index.html`): Chat-style UI for natural language interaction
-- **Health Checks**: `/health` and `/schema` endpoints for monitoring
 
 ## 🔧 Technical Implementation
 
@@ -104,18 +103,18 @@ The system passes all three required acceptance tests:
 
 3. **Configure environment**:
    ```bash
-   cp .env.example .env
+   cp  .env
    # Edit .env with your actual credentials
    ```
 
 4. **Run the application**:
    ```bash
-   python src/app.py
+   python main.py
    ```
 
 5. **Access the interface**:
    - Web UI: http://localhost:5000
-   - API: http://localhost:5000/api/query
+   
 
 ### Environment Variables
 

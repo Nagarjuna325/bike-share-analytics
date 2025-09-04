@@ -35,4 +35,4 @@ RUN pip install --no-cache-dir \
 EXPOSE 5000
 
 # Run the application
-CMD ["gunicorn", "--bind", "0.0.0.0:5000", "--reuse-port", "--reload", "main:app"]
+CMD ["gunicorn", "--bind", "0.0.0.0:${PORT}", "--reuse-port", "--reload", "main:app"]

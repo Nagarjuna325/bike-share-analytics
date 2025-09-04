@@ -1,6 +1,6 @@
 import logging
 import re
-from typing import Dict, Any, Optional, List
+from typing import Dict, Any, List
 from groq import Groq
 from src.config import Config
 from src.services.schema_discovery import SchemaDiscoveryService
@@ -9,12 +9,15 @@ from src.services.semantic_matcher import SemanticMatcher
 logger = logging.getLogger(__name__)
 
 class NLPToSQLService:
-    """Service for converting natural language to SQL using Groq LLM"""
+    """Service for converting natural language to SQL using Groq LLM and embeddings-based semantic matcher"""
     
     def __init__(self, config: Config):
         self.config = config
         self.schema_service = SchemaDiscoveryService(config)
-        self.semantic_matcher = SemanticMatcher()
+        
+        # Get all columns/tables from schema and initialize embeddings-based matcher
+        all_columns = self.schema_service.get_all_columns()
+        self.semantic_matcher = SemanticMatcher(schema_elements=all_columns)
         
         try:
             self.groq_client = Groq(api_key=config.GROQ_API_KEY)
@@ -31,12 +34,24 @@ class NLPToSQLService:
             
             # Extract semantic terms from question
             user_terms = self.semantic_matcher.extract_semantic_terms(question)
-            all_columns = self.schema_service.get_all_columns()
+            
             
             # Find semantic matches
-            semantic_matches = self.semantic_matcher.find_semantic_matches(
-                user_terms, all_columns
-            )
+            semantic_matches = self.semantic_matcher.find_semantic_matches(user_terms)
+            
+            # after getting semantic_matches
+
+            filtered_matches = {k: [m for m in v if m[1] >= 0.4] for k, v in semantic_matches.items()}
+
+            # If no valid semantic matches, skip SQL generation
+            if all(len(v) == 0 for v in filtered_matches.values()):  
+               logger.info(f"No semantic matches found for question: {question}")
+               return {
+                      'sql': None,
+                      'semantic_matches': semantic_matches,
+                      'user_terms': user_terms,
+                      'error': "NO_DATA_FOUND"
+                }
             
             # Build enhanced prompt with semantic context
             semantic_context = self._build_semantic_context(semantic_matches)
@@ -94,13 +109,13 @@ INSTRUCTIONS:
    - "kilometres/distance" maps to trip_distance_km column
    - Station names map to station_name column
    - Time references need proper date filtering (use actual dates like '2025-06-01')
-   - "departures/started from" uses start_station_id (where trips began)
-   - "arrivals/ended at" uses end_station_id (where trips finished)
+   - "departures/started from" uses start_station_id
+   - "arrivals/ended at" uses end_station_id
 8. IMPORTANT: Do not include any parameter placeholders, use actual values in the SQL
 9. WEATHER QUERIES: For rainy/weather conditions, join trips with daily_weather using:
    JOIN daily_weather ON DATE(trips.started_at) = daily_weather.weather_date
-   Then filter with: daily_weather.precipitation_mm > 0 (for rainy days)
-10. GENDER VALUES: Use exact values from the database - 'male' and 'female' (lowercase)
+   Then filter with: daily_weather.precipitation_mm > 0
+10. GENDER VALUES: Use exact values from the database - 'male' and 'female'
 
 Generate the SQL query:"""
 
@@ -109,7 +124,7 @@ Generate the SQL query:"""
                 raise ValueError("Groq client not available")
                 
             response = self.groq_client.chat.completions.create(
-                model="llama-3.1-8b-instant",  # Using Groq's free tier model
+                model="llama-3.1-8b-instant",
                 messages=[{"role": "user", "content": prompt}],
                 temperature=0.1,
                 max_tokens=1000
@@ -117,20 +132,17 @@ Generate the SQL query:"""
             
             sql_query = response.choices[0].message.content.strip()
             
-            # Extract SQL from response (remove any markdown formatting and explanatory text)
             # Remove markdown code blocks
             sql_query = re.sub(r'```sql\s*', '', sql_query)
             sql_query = re.sub(r'```\s*', '', sql_query)
             
-            # Remove any text after the SQL query (explanations, notes, etc.)
-            # Split by lines and keep only SQL-like lines
+            # Keep only SQL-like lines
             lines = sql_query.split('\n')
             sql_lines = []
             for line in lines:
                 line = line.strip()
                 if not line:
                     continue
-                # Skip explanatory lines that don't look like SQL
                 if (line.lower().startswith('note:') or 
                     line.lower().startswith('this query') or 
                     line.lower().startswith('the above') or
@@ -140,7 +152,6 @@ Generate the SQL query:"""
                 sql_lines.append(line)
             
             sql_query = '\n'.join(sql_lines).strip()
-            
             logger.info(f"Generated SQL: {sql_query}")
             return sql_query
             
@@ -151,8 +162,6 @@ Generate the SQL query:"""
     def _generate_sql_fallback(self, question: str, semantic_matches: Dict[str, List]) -> str:
         """Fallback SQL generation when LLM is unavailable"""
         logger.warning("Using fallback SQL generation")
-        
-        # Simple rule-based SQL generation for basic cases
         question_lower = question.lower()
         
         if 'average' in question_lower and 'ride time' in question_lower:
@@ -160,26 +169,16 @@ Generate the SQL query:"""
             SELECT AVG(duration_minutes) as average_ride_time
             FROM journeys j
             JOIN stations s ON j.start_station_id = s.station_id
-            WHERE s.name LIKE '%Congress Avenue%'
-            AND EXTRACT(MONTH FROM j.start_time) = 6
-            AND EXTRACT(YEAR FROM j.start_time) = 2025
             """
-        
         elif 'most departures' in question_lower:
             return """
             SELECT s.name as station_name, COUNT(*) as departure_count
             FROM journeys j
             JOIN stations s ON j.start_station_id = s.station_id
-            WHERE EXTRACT(MONTH FROM j.start_time) = 6
-            AND EXTRACT(YEAR FROM j.start_time) = 2025
-            AND j.start_time >= '2025-06-01'
-            AND j.start_time < '2025-06-08'
             GROUP BY s.station_id, s.name
             ORDER BY departure_count DESC
             LIMIT 1
             """
-        
-        
         elif 'kilometres' in question_lower and 'women' in question_lower:
             return """
             SELECT SUM(t.trip_distance_km) as total_kilometres
@@ -187,22 +186,17 @@ Generate the SQL query:"""
             JOIN daily_weather w ON DATE(t.started_at) = w.weather_date
             WHERE t.rider_gender = 'female'
             AND w.precipitation_mm > 0
-            AND EXTRACT(MONTH FROM t.started_at) = 6
-            AND EXTRACT(YEAR FROM t.started_at) = 2025
             """
-        
         else:
             raise ValueError("Unable to generate SQL query from question")
     
     def _build_semantic_context(self, semantic_matches: Dict[str, List]) -> str:
         """Build context string from semantic matches"""
         context_parts = []
-        
         for term, matches in semantic_matches.items():
             if matches:
                 match_strings = [f"{match[0]} (score: {match[1]:.2f})" for match in matches]
                 context_parts.append(f"'{term}' maps to {', '.join(match_strings)}")
-        
         return "\n".join(context_parts) if context_parts else "No semantic matches found"
     
     def _validate_and_clean_sql(self, sql_query: str) -> str:
@@ -210,10 +204,7 @@ Generate the SQL query:"""
         if not sql_query:
             raise ValueError("Empty SQL query generated")
         
-        # Remove any trailing semicolons
         sql_query = sql_query.rstrip(';').strip()
-        
-        # Basic SQL injection protection
         dangerous_keywords = [
             'drop', 'delete', 'truncate', 'alter', 'create', 'insert', 'update',
             'exec', 'execute', 'sp_', 'xp_', '--', '/*', '*/', 'union all'
@@ -221,14 +212,10 @@ Generate the SQL query:"""
         
         sql_lower = sql_query.lower()
         for keyword in dangerous_keywords:
-            if keyword in sql_lower:
-                logger.warning(f"Potentially dangerous SQL keyword detected: {keyword}")
-                # For bike-share analytics, we only need SELECT queries
-                if not sql_lower.strip().startswith('select'):
-                    raise ValueError(f"Only SELECT queries are allowed. Detected: {keyword}")
+            if keyword in sql_lower and not sql_lower.startswith('select'):
+                raise ValueError(f"Only SELECT queries are allowed. Detected: {keyword}")
         
-        # Ensure it's a SELECT query
-        if not sql_lower.strip().startswith('select'):
+        if not sql_lower.startswith('select'):
             raise ValueError("Only SELECT queries are allowed")
         
         return sql_query

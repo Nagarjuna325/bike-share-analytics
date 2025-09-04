@@ -128,6 +128,8 @@ The system passes all three required acceptance tests:
    source venv/bin/activate  # Linux/Mac
    # or
    venv\Scripts\activate     # Windows
+
+   source venv/Scripts/activate #If you are in bash on Windows, activate your virtual environment
    ```
 
 2. **Install dependencies**:

@@ -5,9 +5,9 @@ FROM python:3.11-slim
 WORKDIR /app
 
 # Set environment variables
-ENV PYTHONPATH=/app
-ENV PYTHONDONTWRITEBYTECODE=1
-ENV PYTHONUNBUFFERED=1
+ENV PYTHONPATH=/app \
+    PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
@@ -31,8 +31,9 @@ RUN pip install --no-cache-dir \
     gunicorn>=23.0.0 \
     email-validator>=2.3.0
 
-# Expose port 5000
-EXPOSE 5000
+# Expose port (Render ignores this, but it's good practice)
+EXPOSE 8000
 
-# Run the application
-CMD ["gunicorn", "--bind", "0.0.0.0:${PORT}", "--reuse-port", "--reload", "main:app"]
+# Run the application with Gunicorn
+# Bind to $PORT provided by Render
+CMD gunicorn --bind 0.0.0.0:$PORT --workers 4 --threads 2 --timeout 120 main:app
